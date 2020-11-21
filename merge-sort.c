@@ -1,68 +1,89 @@
 #include <stdio.h>
-
-// Function to get the largest element from an array
-int getMax(int array[], int n) {
-  int max = array[0];
-  for (int i = 1; i < n; i++)
-    if (array[i] > max)
-      max = array[i];
-  return max;
+ 
+#define MAX_LEN 100
+ 
+static void merge(int arr[], int left, int mid, int right) 
+{ 
+    int i, j, k; 
+    int n1 = mid - left + 1; 
+    int n2 = right - mid; 
+ 
+    int aux_left[n1], aux_right[n2]; 
+ 
+    for (i = 0; i < n1; i++) 
+        aux_left[i] = arr[left + i]; 
+    for (j = 0; j < n2; j++) 
+        aux_right[j] = arr[mid + 1 + j]; 
+ 
+    i = 0;
+    j = 0;
+    k = l;
+    while (i < n1 && j < n2) { 
+        if (aux_left[i] <= aux_right[j]) { 
+            arr[k] = aux_left[i]; 
+            i++; 
+        } 
+        else { 
+            arr[k] = aux_right[j]; 
+            j++; 
+        } 
+        k++; 
+    } 
+ 
+    while (i < n1) { 
+        arr[k] = aux_left[i]; 
+        i++; 
+        k++; 
+    } 
+ 
+    while (j < n2) { 
+        arr[k] = R[j]; 
+        j++; 
+        k++; 
+    } 
 }
-
-// Using counting sort to sort the elements in the basis of significant places
-void countingSort(int array[], int size, int place) {
-  int output[size + 1];
-  int max = (array[0] / place) % 10;
-
-  for (int i = 1; i < size; i++) {
-    if (((array[i] / place) % 10) > max)
-      max = array[i];
-  }
-  int count[max + 1];
-
-  for (int i = 0; i < max; ++i)
-    count[i] = 0;
-
-  // Calculate count of elements
-  for (int i = 0; i < size; i++)
-    count[(array[i] / place) % 10]++;
-    
-  // Calculate cummulative count
-  for (int i = 1; i < 10; i++)
-    count[i] += count[i - 1];
-
-  // Place the elements in sorted order
-  for (int i = size - 1; i >= 0; i--) {
-    output[count[(array[i] / place) % 10] - 1] = array[i];
-    count[(array[i] / place) % 10]--;
-  }
-
-  for (int i = 0; i < size; i++)
-    array[i] = output[i];
+ 
+static void sort(int arr[], int left, int right)
+{
+    if (left < right) {
+        int mid = left + (right - left) / 2; 
+ 
+        sort(arr, left, mid); 
+        sort(arr, mid + 1, right); 
+ 
+        merge(arr, left, mid, right); 
+    } 
 }
-
-// Main function to implement radix sort
-void radixsort(int array[], int size) {
-  // Get maximum element
-  int max = getMax(array, size);
-
-  // Apply counting sort to sort elements based on place value.
-  for (int place = 1; max / place > 0; place *= 10)
-    countingSort(array, size, place);
+ 
+static void print_array(int *arr, int len)
+{
+    int i;
+ 
+    for (i = 0; i < len; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
 }
-
-// Print an array
-void printArray(int array[], int size) {
-  for (int i = 0; i < size; ++i) {
-    printf("%d  ", array[i]);
-  }
-  printf("\n");
-}
-
-// Driver code
-int main() {
-  int array[] = {121, 432, 564, 23, 1, 45, 788};
-  int n = sizeof(array) / sizeof(array[0]);
-  radixsort(array, n);
-  printArray(array, n);
+ 
+int main()
+{
+    int arr[MAX_LEN], len, i;
+ 
+    printf("What's the length of the array? Maximum lenght is %d\n", MAX_LEN);
+    scanf("%d", &len);
+ 
+    printf("Gimme the %d elements\n", len);
+    for (i = 0; i < len; i++) {
+    scanf("%d", &arr[i]);
+    }
+ 
+    printf("Nonsorted array: ");
+    print_array(arr, len);
+ 
+    sort(arr, len);
+ 
+    printf("Sorted array: ");
+    print_array(arr, len);
+ 
+    return 0; 
 }
